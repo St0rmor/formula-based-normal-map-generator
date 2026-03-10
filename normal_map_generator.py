@@ -4,9 +4,13 @@ from PIL import Image
 import numpy as np
 
 
+total_width_px = 1024.0
+total_height_px = 512.0
+strength = 20.0
+
+
+
 def height_function(x_norm: np.ndarray, y_norm: np.ndarray) -> np.ndarray:
-    total_width_px = 1024.0
-    total_height_px = 512.0
 
     cone_width_px = 65.0
     cylinder_width_px = 894.0
@@ -30,7 +34,7 @@ def height_function(x_norm: np.ndarray, y_norm: np.ndarray) -> np.ndarray:
         t = x_norm[left_mask] / x_left_cone_end
         r[left_mask] = tip_radius_px + t * (body_radius_px - tip_radius_px)
 
-    # Cylinder: constant radius
+    # Constant radius cylinder
     center_mask = (x_norm >= x_left_cone_end) & (x_norm < x_cylinder_end)
     r[center_mask] = body_radius_px
 
@@ -89,12 +93,11 @@ def save_rgb_image(image_array: np.ndarray, mask: np.ndarray, output_path: Path)
 
 
 def main() -> None:
-    width = 1024
-    height = 512
-    strength = 20.0
-
-    height_output_path = Path("ship_height.png")
-    normal_output_path = Path("ship_normal.png")
+    width = int(total_width_px)
+    height = int(total_height_px)
+    
+    height_output_path = Path("height.png")
+    normal_output_path = Path("normal.png")
 
     x = np.linspace(0.0, 1.0, width, dtype=np.float32)
     y = np.linspace(0.0, 1.0, height, dtype=np.float32)
